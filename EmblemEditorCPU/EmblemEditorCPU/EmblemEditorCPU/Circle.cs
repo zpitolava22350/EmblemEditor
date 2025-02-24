@@ -32,6 +32,14 @@ namespace EmblemEditorCPU {
 
         }
 
+        public Circle(Circle copy, float threshold) {
+            x = copy.x + ThresholdRandom(threshold);
+            y = copy.y + ThresholdRandom(threshold);
+            width = copy.width + ThresholdRandom(threshold);
+            height = copy.height + ThresholdRandom(threshold);
+            color = Color.FromArgb(255, (byte)Math.Floor(Math.Clamp(copy.color.R + ThresholdRandom(threshold), 0, 255)), (byte)Math.Floor(Math.Clamp(copy.color.G + ThresholdRandom(threshold), 0, 255)), (byte)Math.Floor(Math.Clamp(copy.color.B + ThresholdRandom(threshold), 0, 255)));
+        }
+
         public Color? GetColor(float checkX, float checkY) {
             float normX = (checkX - x) / (width / 2);
             float normY = (checkY - y) / (height / 2);
@@ -39,6 +47,9 @@ namespace EmblemEditorCPU {
             return (normX * normX + normY * normY) <= 1 ? color : null;
         }
 
+        public float ThresholdRandom(float threshold) {
+            return (rnd.NextSingle() * (threshold * 2)) - threshold;
+        }
 
     }
 }

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 namespace EmblemEditorCPU {
     internal class Candidate : IComparable, ICloneable {
 
-        public static int sizeDiv = 16;
+        public static int sizeDiv = 8;
 
         public static int size = 320/sizeDiv;
+
+        public static Color background = Color.Black;
 
         private static Color[,] reference = new Color[size, size];
 
@@ -27,21 +29,38 @@ namespace EmblemEditorCPU {
             
         }
 
+        /// <summary>
+        /// Generates one object
+        /// </summary>
         public Candidate() {
             score = long.MaxValue;
             previousCircles = new List<Circle>();
             current = new Circle();
         }
 
+        /// <summary>
+        /// Generate a new circle off of a previous candidate
+        /// </summary>
+        /// <param name="other">Previous candidate</param>
         public Candidate(Candidate other) : this() {
             previousCircles = new List<Circle>(other.previousCircles);
             previousCircles.Add(other.current);
         }
 
+        /// <summary>
+        /// Exact copy
+        /// </summary>
+        /// <param name="other">Candidate to copy</param>
+        /// <param name="bruh">Just here to indicate copy</param>
         public Candidate(Candidate other, bool bruh) {
             previousCircles = new List<Circle>(other.previousCircles);
             score = other.score;
             current = other.current;
+        }
+
+        public Candidate(Candidate other, float threshold) {
+            previousCircles = new List<Circle>(other.previousCircles);
+            current = new Circle(other.current, threshold/sizeDiv);
         }
 
         public static void setReference(Bitmap bmp) {
@@ -59,7 +78,7 @@ namespace EmblemEditorCPU {
             for(int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
 
-                    Color pixelColor = Color.Black;
+                    Color pixelColor = background;
 
                     if (current.GetColor(x, y) != null) {
                         pixelColor = current.color;
@@ -103,7 +122,7 @@ namespace EmblemEditorCPU {
             for (int x = 0; x < 320; x++) {
                 for (int y = 0; y < 320; y++) {
 
-                    Color pixelColor = Color.Black;
+                    Color pixelColor = background;
 
                     Circle tempCircle = new Circle(current.x * sizeDiv, current.y * sizeDiv, current.width * sizeDiv, current.height * sizeDiv, current.color);
 
