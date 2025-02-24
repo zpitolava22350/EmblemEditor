@@ -1,4 +1,4 @@
-﻿namespace EmblemEditor {
+﻿namespace EmblemEditorCPU {
     partial class Form1 {
         /// <summary>
         ///  Required designer variable.
@@ -23,52 +23,48 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            glControl1 = new OpenTK.GLControl.GLControl();
             pictureBox1 = new PictureBox();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
-            // 
-            // glControl1
-            // 
-            glControl1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            glControl1.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
-            glControl1.APIVersion = new Version(3, 3, 0, 0);
-            glControl1.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
-            glControl1.IsEventDriven = true;
-            glControl1.Location = new Point(310, 12);
-            glControl1.Name = "glControl1";
-            glControl1.Profile = OpenTK.Windowing.Common.ContextProfile.Core;
-            glControl1.SharedContext = null;
-            glControl1.Size = new Size(512, 512);
-            glControl1.TabIndex = 0;
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(12, 106);
+            pictureBox1.Location = new Point(12, 12);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(256, 256);
+            pictureBox1.Size = new Size(320, 320);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 1;
+            pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Location = new Point(338, 12);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(320, 320);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 1;
+            pictureBox2.TabStop = false;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(834, 536);
+            ClientSize = new Size(671, 344);
+            Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
-            Controls.Add(glControl1);
-            MaximumSize = new Size(2558, 575);
-            MinimumSize = new Size(850, 575);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private OpenTK.GLControl.GLControl glControl1;
         private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
     }
 }
