@@ -8,9 +8,9 @@ namespace EmblemEditorCPU {
         List<Candidate> candidates;
 
         int objects = 1000;
-        int tries = 20000;
+        int tries = 10000;
         int takeFrom = 30;
-        int modifications = 700;
+        int modifications = 300;
 
         public Form1() {
 
