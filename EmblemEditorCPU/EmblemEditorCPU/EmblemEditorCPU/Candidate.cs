@@ -24,7 +24,6 @@ namespace EmblemEditorCPU {
 
         private List<Circle> previousCircles;
         private Circle current;
-        private int[,] sections;
 
         public long score { get; private set; }
 
@@ -39,12 +38,6 @@ namespace EmblemEditorCPU {
             score = long.MaxValue;
             previousCircles = new List<Circle>();
             current = new Circle();
-            sections = new int[size / sectionSize, size / sectionSize];
-            for(int x = 0; x < (size/sectionSize); x++) {
-                for (int y = 0; y < (size / sectionSize); y++) {
-                    sections[x, y] = 0;
-                }
-            }
         }
 
         /// <summary>
@@ -65,12 +58,10 @@ namespace EmblemEditorCPU {
             previousCircles = new List<Circle>(other.previousCircles);
             score = other.score;
             current = other.current;
-            sections = other.sections;
         }
 
         public Candidate(Candidate other, float threshold) {
             previousCircles = new List<Circle>(other.previousCircles);
-            sections = other.sections;
             current = new Circle(other.current, threshold/sizeDiv);
         }
 
@@ -86,66 +77,30 @@ namespace EmblemEditorCPU {
 
         public void CalculateScore() {
             long tempScore = 0;
-            if(score == long.MaxValue) {
-                for (int x = 0; x < size; x++) {
-                    for (int y = 0; y < size; y++) {
 
-                        Color pixelColor = background;
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
 
-                        if (current.GetColor(x, y) != null) {
-                            pixelColor = current.color;
-                        } else {
-                            foreach (Circle circle in previousCircles.AsEnumerable().Reverse()) {
-                                if (circle.GetColor(x, y) != null) {
-                                    pixelColor = circle.color;
-                                    break;
-                                }
+                    Color pixelColor = background;
+
+                    if (current.GetColor(x, y) != null) {
+                        pixelColor = current.color;
+                    } else {
+                        foreach (Circle circle in previousCircles.AsEnumerable().Reverse()) {
+                            if (circle.GetColor(x, y) != null) {
+                                pixelColor = circle.color;
+                                break;
                             }
                         }
-
-                        int temp = ColorDifference(pixelColor, reference[x, y]);
-                        tempScore += temp;
-                        sections[x / sectionSize, y / sectionSize] += temp;
-
                     }
+
+                    int temp = ColorDifference(pixelColor, reference[x, y]);
+                    tempScore += temp;
+
                 }
-            } else {
-                int minX = (int)Math.Max(Math.Floor((current.x - (current.width / 2)) / sectionSize), 0);
-                int maxX = (int)Math.Min(Math.Floor((current.x + (current.width / 2)) / sectionSize), size / sectionSize);
-                int minY = (int)Math.Max(Math.Ceiling((current.y - (current.height / 2)) / sectionSize), 0);
-                int maxY = (int)Math.Min(Math.Ceiling((current.y + (current.height / 2)) / sectionSize), size / sectionSize);
-                for (int x = minX; x < maxX+1; x++) {
-                    for (int y = minY; y < maxY+1; y++) {
-
-                        Color pixelColor = background;
-
-                        if (current.GetColor(x, y) != null) {
-                            pixelColor = current.color;
-                        } else {
-                            foreach (Circle circle in previousCircles.AsEnumerable().Reverse()) {
-                                if (circle.GetColor(x, y) != null) {
-                                    pixelColor = circle.color;
-                                    break;
-                                }
-                            }
-                        }
-
-                        int temp = ColorDifference(pixelColor, reference[x, y]);
-                        //tempScore += temp;
-                        sections[x / sectionSize, y / sectionSize] += temp;
-
-                    }
-                }
-
-                for (int x = 0; x < (size / sectionSize); x++) {
-                    for (int y = 0; y < (size / sectionSize); y++) {
-                        tempScore += sections[x, y];
-                    }
-                }
-
             }
 
-                score = tempScore;
+            score = tempScore;
         }
 
         public int CompareTo(object obj) {
