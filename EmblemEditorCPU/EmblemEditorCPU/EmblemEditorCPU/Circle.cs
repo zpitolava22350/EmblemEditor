@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace EmblemEditorCPU {
     internal class Circle {
@@ -37,14 +38,12 @@ namespace EmblemEditorCPU {
             y = copy.y + ThresholdRandom(threshold);
             width = copy.width + ThresholdRandom(threshold);
             height = copy.height + ThresholdRandom(threshold);
-            color = Color.FromArgb(255, (byte)Math.Floor(Math.Clamp(copy.color.R + ThresholdRandom(threshold), 0, 255)), (byte)Math.Floor(Math.Clamp(copy.color.G + ThresholdRandom(threshold), 0, 255)), (byte)Math.Floor(Math.Clamp(copy.color.B + ThresholdRandom(threshold), 0, 255)));
-        }
-
-        public Color? GetColor(float checkX, float checkY) {
-            float normX = (checkX - x) / (width / 2);
-            float normY = (checkY - y) / (height / 2);
-
-            return (normX * normX + normY * normY) <= 1 ? color : null;
+            int r = (int)Math.Floor(Math.Clamp(copy.color.R + ThresholdRandom(threshold), 0, 255));
+            int g = (int)Math.Floor(Math.Clamp(copy.color.G + ThresholdRandom(threshold), 0, 255));
+            int b = (int)Math.Floor(Math.Clamp(copy.color.B + ThresholdRandom(threshold), 0, 255));
+            if (r > 255 || g > 255 || b > 255)
+                Debug.WriteLine($"{r}, {g}, {b}");
+            color = Color.FromArgb(255, r, g, b);
         }
 
         public float ThresholdRandom(float threshold) {

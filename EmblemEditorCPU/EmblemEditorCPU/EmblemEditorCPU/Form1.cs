@@ -9,15 +9,15 @@ namespace EmblemEditorCPU {
 
         int objects = 1000;
         int tries = 10000;
-        int takeFrom = 30;
-        int modifications = 300;
+        int takeFrom = 40;
+        int modifications = 250;
 
         public Form1() {
 
             InitializeComponent();
 
-            //referenceBitmap = new Bitmap("images/blehpfp320.png");
-            referenceBitmap = new Bitmap("images/IMG_80062.png");
+            referenceBitmap = new Bitmap("images/blehpfp320.png");
+            //referenceBitmap = new Bitmap("images/IMG_80062.png");
 
             Candidate.setReference(referenceBitmap);
 
@@ -31,6 +31,7 @@ namespace EmblemEditorCPU {
 
             candidates = new List<Candidate>();
             List<Candidate> tempList;
+            Stopwatch sw = Stopwatch.StartNew();
 
             // Run first iteration
             for (int i = 0; i < tries; i++) {
@@ -45,7 +46,9 @@ namespace EmblemEditorCPU {
             pictureBox2.Invalidate();
             Application.DoEvents();
 
-            Debug.WriteLine($"Object #1 Generated {best.score}");
+            Debug.WriteLine($"Object #1 Generated {best.score}\n{sw.ElapsedMilliseconds}ms");
+            sw.Restart();
+            
 
             // Make better
             candidates = candidates.Take(takeFrom).ToList();
@@ -53,7 +56,7 @@ namespace EmblemEditorCPU {
             Debug.WriteLine(candidates.Count());
             foreach (Candidate c in tempList) {
                 for(int i = 0; i < modifications; i++) {
-                    candidates.Add(new Candidate(c, 10f));
+                    candidates.Add(new Candidate(c, 0f));
                     candidates[candidates.Count()-1].CalculateScore();
                 }
             }
@@ -65,11 +68,13 @@ namespace EmblemEditorCPU {
             pictureBox2.Invalidate();
             Application.DoEvents();
 
-            Debug.WriteLine($"Object #1 Improved {best.score}");
+            Debug.WriteLine($"Object #1 Improved {best.score}\n{sw.ElapsedMilliseconds}ms");
+            sw.Restart();
 
             // Run other iterations
             for (int t = 0; t < objects-1; t++) {
                 candidates = new List<Candidate>();
+                
                 for (int i = 0; i < tries; i++) {
                     candidates.Add(new Candidate(best));
                     candidates[i].CalculateScore();
@@ -82,15 +87,16 @@ namespace EmblemEditorCPU {
                 pictureBox2.Invalidate();
                 Application.DoEvents();
 
-                Debug.WriteLine($"Object #{t + 2} Generated {best.score}");
-
+                Debug.WriteLine($"Object #{t + 2} Generated {best.score}\n{sw.ElapsedMilliseconds}ms");
+                sw.Restart();
+                /*
                 // Make better
                 candidates = candidates.Take(takeFrom).ToList();
                 tempList = candidates.ToList();
                 foreach (Candidate c in tempList) {
                     for (int i = 0; i < modifications; i++) {
-                        candidates.Add(new Candidate(c, 10f));
-                        candidates[candidates.Count() - 1].CalculateScore();
+                        candidates.Add(new Candidate(c, 0f));
+                        candidates.Last().CalculateScore();
                     }
                 }
 
@@ -101,9 +107,53 @@ namespace EmblemEditorCPU {
                 pictureBox2.Invalidate();
                 Application.DoEvents();
 
-                Debug.WriteLine($"Object #{t + 2} Improved {best.score}");
+                Debug.WriteLine($"Object #{t + 2} Improved {best.score}\n{sw.ElapsedMilliseconds}ms");
+                sw.Restart();
+
+                // Make better
+                candidates = candidates.Take(takeFrom).ToList();
+                tempList = candidates.ToList();
+                foreach (Candidate c in tempList) {
+                    for (int i = 0; i < modifications; i++) {
+                        candidates.Add(new Candidate(c, 0f));
+                        candidates.Last().CalculateScore();
+                    }
+                }
+
+                candidates.Sort();
+                best = (Candidate)candidates[0].Clone();
+                best.RenderCandidate();
+                pictureBox2.Image = Candidate.finalBitmap;
+                pictureBox2.Invalidate();
+                Application.DoEvents();
+
+                Debug.WriteLine($"Object #{t + 2} Improved {best.score}\n{sw.ElapsedMilliseconds}ms");
+                sw.Restart();
+
+                // Make better
+                candidates = candidates.Take(takeFrom).ToList();
+                tempList = candidates.ToList();
+                foreach (Candidate c in tempList) {
+                    for (int i = 0; i < modifications; i++) {
+                        candidates.Add(new Candidate(c, 0f));
+                        candidates.Last().CalculateScore();
+                    }
+                }
+
+                candidates.Sort();
+                best = (Candidate)candidates[0].Clone();
+                best.RenderCandidate();
+                pictureBox2.Image = Candidate.finalBitmap;
+                pictureBox2.Invalidate();
+                Application.DoEvents();
+
+                Debug.WriteLine($"Object #{t + 2} Improved {best.score}\n{sw.ElapsedMilliseconds}ms");
+                sw.Restart();
+                */
 
             }
+
+            sw.Stop();
 
         }
 
