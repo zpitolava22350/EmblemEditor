@@ -7,7 +7,7 @@ namespace EmblemEditorCPU {
 
         List<Candidate> candidates;
 
-        int objects = 1000;
+        int objects = 2000;
         int tries = 10000;
         int takeFrom = 30;
         int modifications = 300;
@@ -16,8 +16,8 @@ namespace EmblemEditorCPU {
 
             InitializeComponent();
 
-            //referenceBitmap = new Bitmap("images/blehpfp320.png");
-            referenceBitmap = new Bitmap("images/IMG_80062.png");
+            referenceBitmap = new Bitmap("images/blehpfp320.png");
+            //referenceBitmap = new Bitmap("images/IMG_80062.png");
 
             Candidate.setReference(referenceBitmap);
 
