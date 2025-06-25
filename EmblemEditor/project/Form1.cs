@@ -14,45 +14,41 @@ namespace EmblemEditor {
 
         Random rnd;
 
-        Shader shader;
-
-        Shader diffProgram;
-        Shader squareProgram;
-
-        Texture texture;
-
-        float[] vertices = {
-            //Position        Texture coordinates
-            1f,  1f, 0.0f,    1.0f, 1.0f, // top right
-            1f, -1f, 0.0f,    1.0f, 0.0f, // bottom right
-            -1f, -1f, 0.0f,   0.0f, 0.0f, // bottom left
-            -1f,  1f, 0.0f,   0.0f, 1.0f  // top left
-        };
-
-        uint[] indices = {  // note that we start from 0!
-            0, 1, 3,   // first triangle
-            1, 2, 3    // second triangle
-        };
-
-        int vbo;
-        int vao;
-
-        int sceneFBO;
-        int sceneTex;
-
         public Form1() {
             InitializeComponent();
             StbImage.stbi_set_flip_vertically_on_load(1);
+
+            Candidate.SetControl(glControl1);
 
             rnd = new Random();
 
             glControl1.Paint += GlControl1_Paint;
             glControl1.Load += GlControl1_Load;
             glControl1.Resize += GlControl1_Resize;
-
-            FormClosing += (object? sender, FormClosingEventArgs e) => { shader.Dispose(); };
         }
 
+        public void GlControl1_Load(object? sender, EventArgs e) {
+            if (!glControl1.Context.IsCurrent)
+                glControl1.MakeCurrent();
+
+            Candidate.Load();
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+
+            if (!glControl1.Context.IsCurrent)
+                glControl1.MakeCurrent();
+
+            //if (LoadedImage == null)
+                //return;
+
+            Candidate c = new Candidate();
+
+            c.CalculateScore(true);
+
+        }
+
+        /*
         public void GlControl1_Load(object? sender, EventArgs e) {
             if (!glControl1.Context.IsCurrent)
                 glControl1.MakeCurrent();
@@ -125,24 +121,6 @@ namespace EmblemEditor {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
-        private void GlControl1_Resize(object? sender, EventArgs e) {
-            if (!glControl1.Context.IsCurrent)
-                glControl1.MakeCurrent();
-
-            GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
-        }
-
-        private void GlControl1_Paint(object? sender, PaintEventArgs e) {
-
-            if (!glControl1.Context.IsCurrent)
-                glControl1.MakeCurrent();
-
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            glControl1.SwapBuffers();
-
-        }
-
         private void button1_Click(object sender, EventArgs e) {
 
             if (!glControl1.Context.IsCurrent)
@@ -162,7 +140,26 @@ namespace EmblemEditor {
             GL.DrawElements(BeginMode.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             glControl1.SwapBuffers();
+            
+        }
+        */
 
+        private void GlControl1_Paint(object? sender, PaintEventArgs e) {
+
+            if (!glControl1.Context.IsCurrent)
+                glControl1.MakeCurrent();
+
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            glControl1.SwapBuffers();
+
+        }
+        
+        private void GlControl1_Resize(object? sender, EventArgs e) {
+            if (!glControl1.Context.IsCurrent)
+                glControl1.MakeCurrent();
+
+            GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
         }
 
         private void Form1_DragDrop(object sender, DragEventArgs e) {
@@ -175,8 +172,8 @@ namespace EmblemEditor {
                     pictureBox1.Image = LoadedImage;
                     //ImageResult image = ImageResult.FromStream(File.OpenRead(LoadedImageFilepath), ColorComponents.RedGreenBlueAlpha);
 
-                    texture = Texture.LoadFromFile(LoadedImageFilepath);
-                    texture.Use(TextureUnit.Texture0);
+                    Candidate.Reference = Texture.LoadFromFile(LoadedImageFilepath);
+                    //texture.Use(TextureUnit.Texture0);
                 }
             }
         }
