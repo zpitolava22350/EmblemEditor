@@ -1,20 +1,15 @@
 ﻿#version 330 core
-in vec2 fsTexCoord;
+in vec2 vUV;
+uniform sampler2D uFb;
+uniform sampler2D uRef;
 
-uniform sampler2D uSceneTex;      // binding = 0
-uniform sampler2D uReferenceTex;  // binding = 1
+out float fragValue;
 
-out float outDiff;  // write to a single‐channel R32f
+void main() {
+    vec4 fb = texture(uFb, vUV);
+    vec4 ref = texture(uRef, vUV);
 
-void main()
-{
-    vec3 sceneColor = texture(uSceneTex, fsTexCoord).rgb;
-    vec3 refColor   = texture(uReferenceTex, fsTexCoord).rgb;
+    float diff = (ref.r - fb.r) + (ref.g - fb.g) + (ref.b - fb.b);
 
-    // Compute per‐pixel difference; choose your metric.
-    // Example: L1 difference (sum of absolute differences in R,G,B)
-    vec3 diff3 = abs(sceneColor - refColor);
-    float pixelError = diff3.r + diff3.g + diff3.b;
-
-    outDiff = pixelError;
+    fragValue = diff;
 }

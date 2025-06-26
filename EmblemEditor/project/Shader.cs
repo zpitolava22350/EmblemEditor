@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace EmblemEditor {
     internal class Shader: IDisposable {
@@ -65,6 +66,13 @@ namespace EmblemEditor {
 
         public void Use() {
             GL.UseProgram(Handle);
+        }
+
+        public void SetInt(string name, int value) {
+            int location = GL.GetUniformLocation(Handle, name);
+            if (location == -1)
+                throw new Exception($"Uniform '{name}' not found.");
+            GL.Uniform1(location, value);
         }
 
         protected virtual void Dispose(bool disposing) {
