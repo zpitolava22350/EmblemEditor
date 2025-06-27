@@ -18,15 +18,28 @@ namespace EmblemEditor {
         public Vector2 Position { get; private set; }
         public Vector2 Size { get; private set; }
         public float Rotation { get; private set; }
-        public Vector4 Color { get; private set; }
+        public Vector4 Color { get; set; }
         public ShapeType Type { get; private set; }
 
         public Shape() {
             Position = new Vector2((rnd.NextSingle() * 2f) - 1f, (rnd.NextSingle() * 2f) - 1f);
             Size = new Vector2(rnd.NextSingle() * MaxSize, rnd.NextSingle() * MaxSize);
             //Rotation = rnd.NextSingle() * MathHelper.Pi * 2f;
-            Color = new Vector4(rnd.NextSingle(), rnd.NextSingle(), rnd.NextSingle(), rnd.NextSingle());
+            //Color = new Vector4(rnd.NextSingle(), rnd.NextSingle(), rnd.NextSingle(), rnd.NextSingle());
+            Color = new Vector4(1f, 1f, 1f, 1f);
             Type = ShapeType.Square;
+        }
+
+        public Shape(Shape shape) {
+            Position = shape.Position;
+            Size = shape.Size;
+            //Rotation = shape.Rotation;
+            Color = shape.Color;
+            Type = shape.Type;
+            Position += new Vector2((rnd.NextSingle() * 0.1f) - 0.05f, (rnd.NextSingle() * 0.1f) - 0.05f);
+            Size += new Vector2((rnd.NextSingle() * 0.1f) - 0.05f, (rnd.NextSingle() * 0.1f) - 0.05f);
+            //Rotation += (rnd.NextSingle() * 0.1f) - 0.05f;
+            //Color += new Vector4((rnd.NextSingle() * 0.1f) - 0.05f, (rnd.NextSingle() * 0.1f) - 0.05f, (rnd.NextSingle() * 0.1f) - 0.05f, (rnd.NextSingle() * 0.1f) - 0.05f);
         }
 
         public List<float> BoundingBox() {

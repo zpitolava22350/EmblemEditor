@@ -9,7 +9,7 @@ void main() {
     vec4 fb = texture(uFb, vUV);
     vec4 ref = texture(uRef, vUV);
 
-    float diff = (ref.r - fb.r) + (ref.g - fb.g) + (ref.b - fb.b);
+    float diff = abs(ref.r - fb.r) + abs(ref.g - fb.g) + abs(ref.b - fb.b);
 
     fragValue = diff;
 }
